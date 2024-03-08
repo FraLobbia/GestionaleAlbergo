@@ -1,0 +1,167 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+    if (TempData["msgErrore"] != null)
+    {
+        ViewBag.msgErrore = TempData["msgErrore"];
+    }
+    if (TempData["msgSuccess"] != null)
+    {
+        ViewBag.msgSuccess = TempData["msgSuccess"];
+    }
+
+    // ottieni lista clienti con il metodo GetClienti
+    var clienti = GestionaleAlbergo.Models.Utility.GetClienti();
+
+    // crea una select list con i codici fiscali dei clienti
+    var selectListClienti = new SelectList(clienti, "CodiceFiscale", "CodiceFiscale");
+}
+
+<h1>Benvenuto nel Gestionale Albergo</h1>
+@if (ViewBag.msgErrore != null)
+{
+    <div class="alert alert-danger fw-bold text-danger my-3" role="alert">
+        @ViewBag.msgErrore
+    </div>
+}
+@if (ViewBag.msgSuccess != null)
+{
+    <div class="alert alert-success fw-bold text-success my-3" role="alert">
+        @ViewBag.msgSuccess
+    </div>
+}
+<div class="d-flex justify-content-evenly align-items-center">
+
+    <div class="form-group">
+        <label for="codiceFiscale">Seleziona un codice fiscale</label>
+        @Html.DropDownList("codiceFiscale", selectListClienti, new { @class = "form-control" })
+        <button id="btnPrenotazioneByCodiceFiscale" onclick="getPrenotazioneByCodiceFiscale()" class="btn btn-primary">Prenotazioni con codice fiscale</button>
+
+    </div>
+
+    <div class="vr"></div>
+
+    <button id="btnPrenotazionePensioneCompleta" onclick="getPrenotazionePensioneCompleta()" class="btn btn-primary mx-4">Pensioni complete</button>
+
+</div>
+
+<div>
+    <div id="PrenotazioniByCodiceFiscale"></div>
+    <div id="PrenotazioniPensioneCompleta"></div>
+</div>
+
+
+
+
+<main>
+
+</main>
+
+@section scripts{
+    <script>
+
+        // =============== Fetch per le pensioni complete ===============
+        function getPrenotazionePensioneCompleta() {
+            fetch('https://localhost:44336/Home/GetPrenotazioniPensioneCompleta')
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    const PrenotazioniByCodiceFiscale = document.getElementById("PrenotazioniByCodiceFiscale");
+                    const PrenotazioniPensioneCompleta = document.getElementById("PrenotazioniPensioneCompleta");
+                    // nascondo le PrenotazioniByCodiceFiscale e mostro le PrenotazioniPensioneCompleta
+                    PrenotazioniByCodiceFiscale.hidden = true;
+                    PrenotazioniPensioneCompleta.hidden = false;
+
+                    PrenotazioniPensioneCompleta.innerHTML = ''; // Pulizia dei dati precedenti
+
+                    for (let i = 0; i < data.length; i++) {
+                        // Gestione della data di inizio periodo
+                        let periodoDal = new Date(parseInt(data[i].PeriodoDal.substr(6)));
+                        // Gestione della data di fine periodo
+                        let periodoAl = new Date(parseInt(data[i].PeriodoAl.substr(6)));
+
+                        PrenotazioniPensioneCompleta.innerHTML += `
+                            <div class="col-md-4">
+                                <div class="card mb-4">
+                                    <div class="card-body">
+                                        <h5 class="card-title">${data[i].Cliente.NomeCompleto}</h5>
+                                        <h6 class="card-subtitle mb-2 text-muted">${data[i].TipoSoggiorno}</h6>
+                                        <p class="card-text">Numero camera: ${data[i].Camera.Numero}</p>
+                                        <p class="card-text">Periodo: ${periodoDal.toLocaleDateString()} - ${periodoAl.toLocaleDateString()}</p>
+                                        <p class="card-text">Importo dovuto: $${data[i].ImportoDovuto}</p>
+                                        <p class="card-text">Telefono: ${data[i].Cliente.Telefono}</p>
+                                        <p class="card-text">Email: ${data[i].Cliente.Email}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }
+                })
+                .catch(error => {
+                    console.error('Si è verificato un errore durante il recupero dei dati:', error);
+                });
+        }
+
+        // =============== Fetch per le prenotazioni by codice fiscale ===============
+        function getPrenotazioneByCodiceFiscale() {
+            var codiceFiscale = document.getElementById("codiceFiscale").value;
+            fetch('https://localhost:44336/Home/GetPrenotazioniByCodiceFiscale/' + codiceFiscale)
+                .then(response => response.json())
+                .then(data => {
+                    const PrenotazioniByCodiceFiscale = document.getElementById("PrenotazioniByCodiceFiscale");
+                    const PrenotazioniPensioneCompleta = document.getElementById("PrenotazioniPensioneCompleta");
+                    // nascondo le PrenotazioniByCodiceFiscale e mostro le PrenotazioniPensioneCompleta
+                    PrenotazioniByCodiceFiscale.hidden = false;
+                    PrenotazioniPensioneCompleta.hidden = true;
+
+                    PrenotazioniByCodiceFiscale.innerHTML = ''; // Pulizia dei dati precedenti
+
+                    data.forEach(prenotazione => {
+                        // Gestione della data di inizio periodo
+                        let periodoDal = new Date(parseInt(prenotazione.PeriodoDal.substr(6)));
+                        // Gestione della data di fine periodo
+                        let periodoAl = new Date(parseInt(prenotazione.PeriodoAl.substr(6)));
+
+                        PrenotazioniByCodiceFiscale.innerHTML += `
+                    <div class="col-md-4">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h5 class="card-title">${prenotazione.Cliente.NomeCompleto}</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">${prenotazione.TipoSoggiorno}</h6>
+                                <p class="card-text">Numero camera: ${prenotazione.Camera.Numero}</p>
+                                <p class="card-text">Periodo: ${periodoDal.toLocaleDateString()} - ${periodoAl.toLocaleDateString()}</p>
+                                <p class="card-text">Importo dovuto: $${prenotazione.ImportoDovuto}</p>
+                                <p class="card-text">Telefono: ${prenotazione.Cliente.Telefono}</p>
+                                <p class="card-text">Email: ${prenotazione.Cliente.Email}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                    });
+                })
+                .catch(error => {
+                    console.error('Si è verificato un errore durante il recupero dei dati:', error);
+                });
+        }
+
+
+
+        function convertiTimestampInData(timestamp) {
+            // Estrarre i millisecondi dal timestamp
+            var millisecondi = parseInt(timestamp.replace("/Date(", "").replace(")/", ""));
+
+            // Creare un oggetto Data utilizzando i millisecondi
+            var data = new Date(millisecondi);
+
+            // Ottenere le informazioni sulla data
+            var giorno = ("0" + data.getDate()).slice(-2); // Aggiungi lo zero iniziale e prendi solo gli ultimi due caratteri
+            var mese = ("0" + (data.getMonth() + 1)).slice(-2); // Mese è zero-based, quindi aggiungi 1 e prendi solo gli ultimi due caratteri
+            var anno = data.getFullYear();
+
+            // Costruire la stringa nel formato leggibile
+            var dataLeggibile = giorno + "/" + mese + "/" + anno;
+
+            return dataLeggibile;
+        }
+
+    </script>
+}

@@ -1,0 +1,75 @@
+﻿@model IEnumerable<GestionaleAlbergo.Models.ServizioAggiuntivo>
+
+@{
+    ViewBag.Title = "Index";
+if (TempData["msgErrore"] != null)
+    {
+        ViewBag.msgErrore = TempData["msgErrore"];
+    }
+    if (TempData["msgSuccess"] != null)
+    {
+        ViewBag.msgSuccess = TempData["msgSuccess"];
+    }
+
+var PrenotazioneId = ViewBag.PrenotazioneId;
+}
+
+<h2>Index</h2>
+
+
+    @Html.ActionLink("Create", "Create", new { id = PrenotazioneId })
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Descrizione)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Data)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Quantita)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Prezzo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PrenotazioneId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Messaggio)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Descrizione)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Data)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Quantita)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Prezzo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PrenotazioneId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Messaggio)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id = item.PrenotazioneId }) |
+            @Html.ActionLink("Details", "Details", new { id = item.PrenotazioneId }) |
+            @Html.ActionLink("Delete", "Delete", new { id = item.PrenotazioneId })
+            @Html.ActionLink("Create", "Create", new { id = item.PrenotazioneId })
+
+        </td>
+    </tr>
+}
+
+</table>

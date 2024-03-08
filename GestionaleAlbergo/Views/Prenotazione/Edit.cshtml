@@ -1,0 +1,141 @@
+﻿@model GestionaleAlbergo.Models.Prenotazione
+
+@{
+    ViewBag.Title = "Edit";
+    if (TempData["msgErrore"] != null)
+    {
+        ViewBag.msgErrore = TempData["msgErrore"];
+    }
+    if (TempData["msgSuccess"] != null)
+    {
+        ViewBag.msgSuccess = TempData["msgSuccess"];
+    }
+
+    // recupero la lista dei clienti per la select
+    var elencoNomeClienti = GestionaleAlbergo.Models.Utility.GetClienti();
+    // creo un oggetto SelectList che contiene la lista dei clienti
+    var selectListClienti = new SelectList(elencoNomeClienti, "Id", "NomeCompleto");
+
+
+    // recupero la lista delle camere per la select
+    var elencoCamere = GestionaleAlbergo.Models.Utility.GetCamere();
+    // creo un oggetto SelectList che contiene la lista delle camere
+    var selectListCamere = new SelectList(elencoCamere, "Id", "NomeCompleto");
+
+    // gestisco la lista dei tipi di soggiorno per la select
+    var ListaTipoSoggiorno = new List<string> { "Pensione completa", "Mezza pensione", "Pernottamento con prima colazione" };
+
+}
+
+<h2>Modifica prenotazione</h2>
+
+
+@if (ViewBag.msgErrore != null)
+{
+    <div class="alert alert-danger fw-bold text-danger my-3" role="alert">
+        @ViewBag.msgErrore
+    </div>
+}
+@if (ViewBag.msgSuccess != null)
+{
+    <div class="alert alert-success fw-bold text-success my-3" role="alert">
+        @ViewBag.msgSuccess
+    </div>
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+    <h4>Prenotazione</h4>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="form-group">
+        @Html.LabelFor(model => model.DataPrenotazione, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.DataPrenotazione, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.DataPrenotazione, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group visually-hidden">
+        @Html.LabelFor(model => model.NumeroProgressivoAnno, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.NumeroProgressivoAnno, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.NumeroProgressivoAnno, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Anno, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Anno, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Anno, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.PeriodoDal, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.PeriodoDal, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.PeriodoDal, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.PeriodoAl, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.PeriodoAl, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.PeriodoAl, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.CaparraConfirmatoria, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.CaparraConfirmatoria, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.CaparraConfirmatoria, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.TariffaApplicata, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.TariffaApplicata, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.TariffaApplicata, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.TipoSoggiorno, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DropDownListFor(model => model.TipoSoggiorno, new SelectList(ListaTipoSoggiorno), "Scegli il tipo del soggiorno", new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.TipoSoggiorno, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.ClienteId, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+
+            @Html.DropDownList("ClienteId", selectListClienti, "Seleziona un cliente", new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.ClienteId, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.CameraId, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DropDownList("CameraId", selectListCamere, "Seleziona una camera", new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.CameraId, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Save" class="btn btn-success" />
+            @Html.ActionLink("Torna a elenco", "Index", null, new { @class = "btn btn-outline-primary" })
+        </div>
+    </div>
+</div>
+}
+

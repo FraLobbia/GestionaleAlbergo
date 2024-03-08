@@ -1,0 +1,84 @@
+﻿@model GestionaleAlbergo.Models.Prenotazione
+
+@{
+    ViewBag.Title = "CheckOut";
+}
+
+<h2>CheckOut</h2>
+
+<div>
+    <h4>Prenotazione</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Camera.NomeCompleto)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Camera.NomeCompleto)
+        </dd>
+
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PeriodoDal)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PeriodoDal)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PeriodoAl)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PeriodoAl)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.TariffaApplicata)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TariffaApplicata)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.NumeroNotti)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NumeroNotti)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ServiziAggiuntivi)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ServiziAggiuntivi)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ImportoServiziAggiuntivi)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ImportoServiziAggiuntivi)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.CaparraConfirmatoria)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CaparraConfirmatoria)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ImportoDovuto)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ImportoDovuto)
+        </dd>
+
+        @Html.ActionLink("Torna a elenco", "Index", null, new { @class = "btn btn-outline-primary" })
+    </dl>
+</div>
+
+
