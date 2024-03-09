@@ -87,7 +87,7 @@
                                         <h6 class="card-subtitle mb-2 text-muted">${data[i].TipoSoggiorno}</h6>
                                         <p class="card-text">Numero camera: ${data[i].Camera.Numero}</p>
                                         <p class="card-text">Periodo: ${periodoDal.toLocaleDateString()} - ${periodoAl.toLocaleDateString()}</p>
-                                        <p class="card-text">Importo dovuto: $${data[i].ImportoDovuto}</p>
+                                        <p class="card-text">Importo dovuto: € ${data[i].ImportoDovuto}</p>
                                         <p class="card-text">Telefono: ${data[i].Cliente.Telefono}</p>
                                         <p class="card-text">Email: ${data[i].Cliente.Email}</p>
                                     </div>
@@ -129,7 +129,7 @@
                                 <h6 class="card-subtitle mb-2 text-muted">${prenotazione.TipoSoggiorno}</h6>
                                 <p class="card-text">Numero camera: ${prenotazione.Camera.Numero}</p>
                                 <p class="card-text">Periodo: ${periodoDal.toLocaleDateString()} - ${periodoAl.toLocaleDateString()}</p>
-                                <p class="card-text">Importo dovuto: $${prenotazione.ImportoDovuto}</p>
+                                <p class="card-text">Importo dovuto: € ${prenotazione.ImportoDovuto}</p>
                                 <p class="card-text">Telefono: ${prenotazione.Cliente.Telefono}</p>
                                 <p class="card-text">Email: ${prenotazione.Cliente.Email}</p>
                             </div>

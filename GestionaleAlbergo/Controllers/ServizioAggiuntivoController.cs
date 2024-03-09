@@ -10,7 +10,7 @@ namespace GestionaleAlbergo.Controllers
         public ActionResult Index(int id)
         {
             // ottieni la lista dei servizi aggiuntivi
-            List<ServizioAggiuntivo> serviziAggiuntivi = Utility.GetServiziAggiuntiviByPrenotazioneId(id);
+            List<ServizioAggiuntivoPrenotazione> serviziAggiuntivi = Utility.GetServiziAggiuntiviByPrenotazioneId(id);
             ViewBag.PrenotazioneId = id;
             return View(serviziAggiuntivi);
         }
@@ -20,12 +20,13 @@ namespace GestionaleAlbergo.Controllers
         {
             int prenotazioneId = id;
             ViewBag.PrenotazioneId = prenotazioneId;
+            ViewBag.ServiziDisponibili = Utility.GetServiziAggiuntivi();
             return View();
         }
 
         // POST: ServizioAggiuntivo/Create
         [HttpPost]
-        public ActionResult Create(ServizioAggiuntivo formServizioAggiuntivo)
+        public ActionResult Create(int id, ServizioAggiuntivoPrenotazione formServizioAggiuntivo)
         {
             if (!ModelState.IsValid)
             {
@@ -38,33 +39,35 @@ namespace GestionaleAlbergo.Controllers
                 {
                     conn.Open();
                     SqlCommand cmd = new SqlCommand(
-                        "INSERT INTO ServizioAggiuntivo (" +
-                        "Descrizione, " +
-                        "Data, " +
-                        "Quantita, " +
-                        "Prezzo, " +
-                        "PrenotazioneId) " +
-                        "VALUES (" +
-                        "@Descrizione, " +
-                        "@Data, " +
-                        "@Quantita, " +
-                        "@Prezzo, " +
-                        "@PrenotazioneId)", conn);
+                            "INSERT INTO PrenotazioneServizioAggiuntivo (" +
+                            "ServizioAggiuntivoId, " +
+                            "Data, " +
+                            "Quantita, " +
+                            "PrenotazioneId) " +
 
-                    cmd.Parameters.AddWithValue("@Descrizione", formServizioAggiuntivo.Descrizione);
-                    cmd.Parameters.AddWithValue("@Data", formServizioAggiuntivo.Data);
-                    cmd.Parameters.AddWithValue("@Quantita", formServizioAggiuntivo.Quantita);
-                    cmd.Parameters.AddWithValue("@Prezzo", formServizioAggiuntivo.Prezzo);
-                    cmd.Parameters.AddWithValue("@PrenotazioneId", formServizioAggiuntivo.PrenotazioneId);
+                            "VALUES (" +
+
+                            "@ServizioAggiuntivoId, " +
+                            "@Data, " +
+                            "@Quantita, " +
+                            "@PrenotazioneId)", conn);
+
+                    cmd.Parameters.AddWithValue("ServizioAggiuntivoId", formServizioAggiuntivo.ServizioAggiuntivoID);
+                    cmd.Parameters.AddWithValue("Data", formServizioAggiuntivo.Data);
+                    cmd.Parameters.AddWithValue("Quantita", formServizioAggiuntivo.Quantita);
+                    cmd.Parameters.AddWithValue("PrenotazioneId", id);
+
                     cmd.ExecuteNonQuery();
+
+                    TempData["msgSuccess"] = "Servizio aggiuntivo inserito con successo";
+                    return RedirectToAction("Index", new { id = id });
                 }
-                catch (SqlException e)
+                catch (SqlException ex)
                 {
-                    formServizioAggiuntivo.Messaggio = e.Message;
-                    return View(formServizioAggiuntivo);
+                    ViewBag.Error = ex.Message;
                 }
             }
-            return RedirectToAction("Index", new { id = formServizioAggiuntivo.PrenotazioneId });
+            return RedirectToAction("Index", new { id = id });
 
         }
 

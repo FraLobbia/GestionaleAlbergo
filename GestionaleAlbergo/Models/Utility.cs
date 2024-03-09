@@ -46,7 +46,7 @@ namespace GestionaleAlbergo.Models
                         p.TariffaApplicata = reader.GetDecimal(reader.GetOrdinal("TariffaApplicata"));
                         p.TipoSoggiorno = reader.GetString(reader.GetOrdinal("TipoSoggiorno"));
                         p.ClienteId = reader.GetInt32(reader.GetOrdinal("ClienteId"));
-                        p.CameraId = reader.GetInt32(reader.GetOrdinal("CameraId"));
+                        p.Camera.Id = reader.GetInt32(reader.GetOrdinal("CameraId"));
 
                         // aggiungi p alla lista prenotazioni
                         prenotazioni.Add(p);
@@ -91,7 +91,7 @@ namespace GestionaleAlbergo.Models
                         p.TariffaApplicata = reader.GetDecimal(reader.GetOrdinal("TariffaApplicata"));
                         p.TipoSoggiorno = reader.GetString(reader.GetOrdinal("TipoSoggiorno"));
                         p.ClienteId = reader.GetInt32(reader.GetOrdinal("ClienteId"));
-                        p.CameraId = reader.GetInt32(reader.GetOrdinal("CameraId"));
+                        p.Camera.Id = reader.GetInt32(reader.GetOrdinal("CameraId"));
                     }
                     return p;
                 }
@@ -139,7 +139,7 @@ namespace GestionaleAlbergo.Models
                         return true;
                     }
                 }
-                catch (Exception ex)
+                catch
                 {
                     return false;
                 }
@@ -182,7 +182,7 @@ namespace GestionaleAlbergo.Models
                         p.TariffaApplicata = reader.GetDecimal(reader.GetOrdinal("TariffaApplicata"));
                         p.TipoSoggiorno = reader.GetString(reader.GetOrdinal("TipoSoggiorno"));
                         p.ClienteId = reader.GetInt32(reader.GetOrdinal("ClienteId"));
-                        p.CameraId = reader.GetInt32(reader.GetOrdinal("CameraId"));
+                        p.Camera.Id = reader.GetInt32(reader.GetOrdinal("CameraId"));
 
                         // aggiungi p alla lista prenotazioni
                         prenotazioni.Add(p);
@@ -234,7 +234,7 @@ namespace GestionaleAlbergo.Models
                         p.TariffaApplicata = reader.GetDecimal(reader.GetOrdinal("TariffaApplicata"));
                         p.TipoSoggiorno = reader.GetString(reader.GetOrdinal("TipoSoggiorno"));
                         p.ClienteId = reader.GetInt32(reader.GetOrdinal("ClienteId"));
-                        p.CameraId = reader.GetInt32(reader.GetOrdinal("CameraId"));
+                        p.Camera.Id = reader.GetInt32(reader.GetOrdinal("CameraId"));
 
                         // aggiungi p alla lista prenotazioni
                         prenotazioni.Add(p);
@@ -441,7 +441,54 @@ namespace GestionaleAlbergo.Models
         // metodo per ottenere i servizi aggiuntivi in base ad un id prenotazione
         // riceve un id di tipo intero che rappresenta l'id della prenotazione
         // restituisce una lista di oggetti di tipo ServizioAggiuntivo
-        public static List<ServizioAggiuntivo> GetServiziAggiuntiviByPrenotazioneId(int prenotazioneId)
+        public static List<ServizioAggiuntivoPrenotazione> GetServiziAggiuntiviByPrenotazioneId(int prenotazioneId)
+        {
+            // crea una lista di servizi aggiuntivi
+            List<ServizioAggiuntivoPrenotazione> serviziAggiuntivi = new List<ServizioAggiuntivoPrenotazione>();
+
+            using (SqlConnection conn = Connection.GetConn())
+            {
+                try
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand(
+                        "SELECT * FROM PrenotazioneServizioAggiuntivo " +
+                        "WHERE PrenotazioneId = @PrenotazioneId", conn);
+                    cmd.Parameters.AddWithValue("PrenotazioneId", prenotazioneId);
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        // crea un oggetto ServizioAggiuntivo
+                        ServizioAggiuntivoPrenotazione s = new ServizioAggiuntivoPrenotazione();
+
+                        // popola s con i dati del record corrente
+                        s.Id = reader.GetInt32(reader.GetOrdinal("ID"));
+                        s.ServizioAggiuntivoID = reader.GetInt32(reader.GetOrdinal("ServizioAggiuntivoId"));
+                        s.Data = reader.GetDateTime(reader.GetOrdinal("Data"));
+                        s.Quantita = reader.GetInt32(reader.GetOrdinal("Quantita"));
+                        s.PrenotazioneId = reader.GetInt32(reader.GetOrdinal("PrenotazioneId"));
+
+                        // aggiungi s alla lista serviziAggiuntivi
+                        serviziAggiuntivi.Add(s);
+
+                    }
+                    return serviziAggiuntivi;
+                }
+                catch (Exception ex)
+                {
+                    ServizioAggiuntivoPrenotazione msgErrore = new ServizioAggiuntivoPrenotazione();
+                    msgErrore.ServizioAggiuntivo.Messaggio = "Errore: " + ex.Message;
+                    serviziAggiuntivi.Add(msgErrore);
+                }
+            }
+
+            return serviziAggiuntivi;
+        }
+
+        // metodo per ottenere la lista dei servizi aggiuntivi
+        // Non riceve nulla
+        // Restituisce una lista di oggetti di tipo ServizioAggiuntivo
+        public static List<ServizioAggiuntivo> GetServiziAggiuntivi()
         {
             // crea una lista di servizi aggiuntivi
             List<ServizioAggiuntivo> serviziAggiuntivi = new List<ServizioAggiuntivo>();
@@ -451,10 +498,7 @@ namespace GestionaleAlbergo.Models
                 try
                 {
                     conn.Open();
-                    SqlCommand cmd = new SqlCommand(
-                        "SELECT * FROM ServizioAggiuntivo " +
-                        "WHERE PrenotazioneId = @PrenotazioneId", conn);
-                    cmd.Parameters.AddWithValue("PrenotazioneId", prenotazioneId);
+                    SqlCommand cmd = new SqlCommand("SELECT * FROM ServiziAggiuntiviDisponibili", conn);
                     SqlDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
@@ -464,10 +508,7 @@ namespace GestionaleAlbergo.Models
                         // popola s con i dati del record corrente
                         s.Id = reader.GetInt32(reader.GetOrdinal("ID"));
                         s.Descrizione = reader.GetString(reader.GetOrdinal("Descrizione"));
-                        s.Data = reader.GetDateTime(reader.GetOrdinal("Data"));
-                        s.Quantita = reader.GetInt32(reader.GetOrdinal("Quantita"));
                         s.Prezzo = reader.GetDecimal(reader.GetOrdinal("Prezzo"));
-                        s.PrenotazioneId = reader.GetInt32(reader.GetOrdinal("PrenotazioneId"));
 
                         // aggiungi s alla lista serviziAggiuntivi
                         serviziAggiuntivi.Add(s);
@@ -484,6 +525,37 @@ namespace GestionaleAlbergo.Models
             }
 
             return serviziAggiuntivi;
+        }
+
+        // metodo per ottenere un servizio aggiuntivo dall'id
+        // riceve un intero che rappresenta l'id del servizio aggiuntivo
+        // restituisce un oggetto di tipo ServizioAggiuntivo
+        public static ServizioAggiuntivo GetServizioAggiuntivoById(int id)
+        {
+            using (SqlConnection conn = Connection.GetConn())
+            {
+                try
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand("SELECT * FROM ServiziAggiuntiviDisponibili WHERE ID = @ID", conn);
+                    cmd.Parameters.AddWithValue("ID", id);
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    ServizioAggiuntivo s = new ServizioAggiuntivo();
+                    while (reader.Read())
+                    {
+                        s.Id = reader.GetInt32(reader.GetOrdinal("ID"));
+                        s.Descrizione = reader.GetString(reader.GetOrdinal("Descrizione"));
+                        s.Prezzo = reader.GetDecimal(reader.GetOrdinal("Prezzo"));
+                    }
+                    return s;
+                }
+                catch (Exception ex)
+                {
+                    ServizioAggiuntivo msgErrore = new ServizioAggiuntivo();
+                    msgErrore.Messaggio = "Errore: " + ex.Message;
+                    return msgErrore;
+                }
+            }
         }
 
     }

@@ -7,6 +7,14 @@ namespace GestionaleAlbergo.Controllers
     [Authorize]
     public class ClienteController : Controller
     {
+
+        //             _____   _______   _____    ____    _   _ 
+        //    /\      / ____| |__   __| |_   _|  / __ \  | \ | |
+        //   /  \    | |         | |      | |   | |  | | |  \| |
+        //  / /\ \   | |         | |      | |   | |  | | | . ` |
+        // / ____ \  | |____     | |     _| |_  | |__| | | |\  |
+        ///_/    \_\  \_____|    |_|    |_____|  \____/  |_| \_|
+
         // GET: Cliente
         public ActionResult Index()
         {
@@ -31,6 +39,11 @@ namespace GestionaleAlbergo.Controllers
         [HttpPost]
         public ActionResult Create(Cliente formCliente)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(formCliente);
+            }
+
             using (SqlConnection conn = Connection.GetConn())
             {
                 try
@@ -46,10 +59,12 @@ namespace GestionaleAlbergo.Controllers
                                 "Email, " +
                                 "Telefono, " +
                                 "Cellulare) " +
+
                                 "VALUES (" +
+
                                 "@CodiceFiscale, " +
-                                "@Nome, " +
                                 "@Cognome, " +
+                                "@Nome, " +
                                 "@Citta, " +
                                 "@Provincia, " +
                                 "@Email, " +
@@ -159,6 +174,111 @@ namespace GestionaleAlbergo.Controllers
                 }
             }
 
+        }
+
+
+        //__      __             _        _____   _____               _______   _____    ____    _   _ 
+        //\ \    / /     /\     | |      |_   _| |  __ \      /\     |__   __| |_   _|  / __ \  | \ | |
+        // \ \  / /     /  \    | |        | |   | |  | |    /  \       | |      | |   | |  | | |  \| |
+        //  \ \/ /     / /\ \   | |        | |   | |  | |   / /\ \      | |      | |   | |  | | | . ` |
+        //   \  /     / ____ \  | |____   _| |_  | |__| |  / ____ \     | |     _| |_  | |__| | | |\  |
+        //    \/     /_/    \_\ |______| |_____| |_____/  /_/    \_\    |_|    |_____|  \____/  |_| \_|
+
+        // Metodo per verificare se il codice fiscale del cliente è disponibile
+        // Richiede il parametro CodiceFiscale in formato stringa
+        // Restituisce un valore booleano in formato JSON
+        public ActionResult isCodiceFiscaleAvailable()
+        {
+            string codiceFiscale = Request["CodiceFiscale"];
+
+            using (SqlConnection conn = Connection.GetConn())
+            {
+                try
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand("SELECT * FROM Cliente WHERE CodiceFiscale = @CodiceFiscale", conn);
+                    cmd.Parameters.AddWithValue("CodiceFiscale", codiceFiscale);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.HasRows)
+                    {
+                        return Json(false, JsonRequestBehavior.AllowGet);
+                    }
+                    else
+                    {
+                        return Json(true, JsonRequestBehavior.AllowGet);
+                    }
+                }
+                catch (SqlException e)
+                {
+                    return Json("Errore di connessione al database: " + e.Message, JsonRequestBehavior.AllowGet);
+                }
+            }
+
+        }
+
+        // NON USATO MA SCRITTO E LASCIATO PER FARE PRATICA
+        // Metodo per verificare se il nome del cliente è disponibile
+        // Richiede il parametro Nome in formato stringa
+        // Restituisce un valore booleano in formato JSON 
+        public ActionResult IsNomeClienteAvailable()
+        {
+            string nome = Request["Nome"];
+            using (SqlConnection conn = Connection.GetConn())
+            {
+                try
+                {
+                    conn.Open();
+                    string query = "SELECT COUNT(*) FROM Cliente WHERE Nome = @Nome";
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Nome", nome);
+                        int count = (int)cmd.ExecuteScalar(); // Restituisce solo la prima colonna della prima riga, ignorando le altre colonne e righe
+                        if (count > 0)
+                        {
+                            return Json(false, JsonRequestBehavior.AllowGet);
+                        }
+                    }
+                }
+                catch (SqlException e)
+                {
+                    return Json("Errore di connessione al database: " + e.Message, JsonRequestBehavior.AllowGet);
+                }
+
+                return Json(true, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        // NON USATO MA SCRITTO E LASCIATO PER FARE PRATICA
+        // Metodo per verificare se il cognome del cliente è disponibile
+        // Richiede il parametro Cognome in formato stringa
+        // Restituisce un valore booleano in formato JSON
+        public ActionResult IsCognomeClienteAvailable()
+        {
+            string cognome = Request["Cognome"];
+            using (SqlConnection conn = Connection.GetConn())
+            {
+                try
+                {
+                    conn.Open();
+                    string query = "SELECT COUNT(*) FROM Cliente WHERE Cognome = @Cognome";
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Cognome", cognome);
+                        int count = (int)cmd.ExecuteScalar(); // Restituisce solo la prima colonna della prima riga, ignorando le altre colonne e righe
+                        if (count > 0)
+                        {
+                            return Json(false, JsonRequestBehavior.AllowGet);
+                        }
+                    }
+                }
+                catch (SqlException e)
+                {
+                    return Json("Errore di connessione al database: " + e.Message, JsonRequestBehavior.AllowGet);
+                }
+
+                return Json(true, JsonRequestBehavior.AllowGet);
+            }
         }
     }
 }

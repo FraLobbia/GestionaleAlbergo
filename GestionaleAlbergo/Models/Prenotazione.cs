@@ -6,35 +6,41 @@ namespace GestionaleAlbergo.Models
 {
     public class Prenotazione
     {
+        //=================================================================//
         [ScaffoldColumn(false)]
         public int Id { get; set; }
-        [DataType(DataType.Date)]
+        //=================================================================//
+        [DataType(DataType.DateTime)]
         [Display(Name = "Data Prenotazione")]
         [Required]
         public DateTime DataPrenotazione { get; set; } = DateTime.Now;
-
+        //=================================================================//
         [Display(Name = "N. Fattura")]
         public int NumeroProgressivoAnno { get; set; }
+        //=================================================================//
+        [Required]
         public int Anno { get; set; } = DateTime.Now.Year;
-
-        [Required(ErrorMessage = "Il campo è obbligatorio.")]
+        //=================================================================//
+        [Required]
         [Display(Name = "A partire dal")]
-        [DataType(DataType.Date)]
+        [DataType(DataType.DateTime)]
         public DateTime PeriodoDal { get; set; } = DateTime.Now;
-
-        [DataType(DataType.Date)]
-        [Required(ErrorMessage = "Il campo è obbligatorio.")]
+        //=================================================================//
+        [DataType(DataType.DateTime)]
+        [Required]
         [Display(Name = "Fino al")]
         public DateTime PeriodoAl { get; set; } = DateTime.Now.AddDays(1);
-
-        [Required(ErrorMessage = "Il campo Caparra è obbligatorio.")]
+        //=================================================================//
+        [Required]
         [Display(Name = "Caparra Confirmatoria")]
+        [DataType(DataType.Currency)]
         public decimal CaparraConfirmatoria { get; set; }
-
-        [Required(ErrorMessage = "Il campo Tariffa è obbligatorio.")]
+        //=================================================================//
+        [Required]
         [Display(Name = "Tariffa Applicata per notte")]
+        [DataType(DataType.Currency)]
         public decimal TariffaApplicata { get; set; } = 80;
-
+        //=================================================================//
         [ScaffoldColumn(false)]
         [Display(Name = "Numero Notti")]
         public int NumeroNotti
@@ -44,7 +50,9 @@ namespace GestionaleAlbergo.Models
                 return (PeriodoAl - PeriodoDal).Days;
             }
         }
+        //=================================================================//
         [ScaffoldColumn(false)]
+        [DataType(DataType.Currency)]
         public decimal ImportoDovuto
         {
             get
@@ -52,14 +60,15 @@ namespace GestionaleAlbergo.Models
                 return TariffaApplicata * NumeroNotti - CaparraConfirmatoria + ImportoServiziAggiuntivi;
             }
         }
-
-        [Required(ErrorMessage = "Il campo Tipo Soggiorno è obbligatorio.")]
+        //=================================================================//
+        [Required]
         [Display(Name = "Tipo Soggiorno")]
         public string TipoSoggiorno { get; set; }
-
-        [Required(ErrorMessage = "Il campo Cliente è obbligatorio.")]
+        //=================================================================//
+        [Required]
         [Display(Name = "Cliente")]
-        public int ClienteId { get; set; }
+        public int ClienteId { get; set; } // foreign key NECESSARIA per ottenere il cliente interamente
+        //=================================================================//
         [ScaffoldColumn(false)]
         public Cliente Cliente
         {
@@ -68,19 +77,21 @@ namespace GestionaleAlbergo.Models
                 return Utility.GetClienteById(ClienteId);
             }
         }
-
-        [Required(ErrorMessage = "Il campo Camera è obbligatorio.")]
-        public int CameraId { get; set; }
+        //=================================================================//
+        [Required]
+        public int CameraId { get; set; } // foreign key NECESSARIA per ottenere la camera interamente
+        //=================================================================//
         [ScaffoldColumn(false)]
-        public Camera Camera
+        public Camera Camera // ottenuta grazie a CameraId
         {
             get
             {
                 return Utility.GetCameraById(CameraId);
             }
         }
+        //=================================================================//
         [ScaffoldColumn(false)]
-        public List<ServizioAggiuntivo> ServiziAggiuntivi
+        public List<ServizioAggiuntivoPrenotazione> ServiziAggiuntivi
         {
             get
             {
@@ -88,8 +99,9 @@ namespace GestionaleAlbergo.Models
             }
 
         }
-
+        //=================================================================//
         [ScaffoldColumn(false)]
+        [DataType(DataType.Currency)]
         public decimal ImportoServiziAggiuntivi
         {
             get
@@ -97,14 +109,15 @@ namespace GestionaleAlbergo.Models
                 decimal importo = 0;
                 foreach (var servizio in ServiziAggiuntivi)
                 {
-                    importo += servizio.Prezzo * servizio.Quantita;
+                    importo += servizio.ServizioAggiuntivo.Prezzo * servizio.Quantita;
                 }
                 return importo;
             }
         }
-
+        //=================================================================//
         [ScaffoldColumn(false)]
         public string Messaggio { get; set; }
+        //=================================================================//
     }
 
 

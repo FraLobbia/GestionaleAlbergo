@@ -139,5 +139,50 @@ namespace GestionaleAlbergo.Controllers
                 }
             }
         }
+
+        //__      __             _        _____   _____               _______   _____    ____    _   _ 
+        //\ \    / /     /\     | |      |_   _| |  __ \      /\     |__   __| |_   _|  / __ \  | \ | |
+        // \ \  / /     /  \    | |        | |   | |  | |    /  \       | |      | |   | |  | | |  \| |
+        //  \ \/ /     / /\ \   | |        | |   | |  | |   / /\ \      | |      | |   | |  | | | . ` |
+        //   \  /     / ____ \  | |____   _| |_  | |__| |  / ____ \     | |     _| |_  | |__| | | |\  |
+        //    \/     /_/    \_\ |______| |_____| |_____/  /_/    \_\    |_|    |_____|  \____/  |_| \_|
+
+        // validation che controlla se la camera è già presente nel db
+        public ActionResult isCameraAlreadyExist()
+        {
+            string numeroCamera = Request["Numero"];
+
+            using (SqlConnection conn = Connection.GetConn())
+            {
+                try
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand(
+                        "SELECT * FROM Camera " +
+                        "WHERE " +
+                        "Numero = @numeroCamera ", conn);
+
+                    // metto i parametri 
+                    cmd.Parameters.AddWithValue("numeroCamera", numeroCamera);
+
+                    // eseguo la query
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    // se il reader ha delle righe significa che la camera è occupata
+                    if (reader.HasRows)
+                    {
+                        return Json(false, JsonRequestBehavior.AllowGet);
+                    }
+                    else
+                    {
+                        return Json(true, JsonRequestBehavior.AllowGet);
+                    }
+                }
+                catch
+                {
+                    return Json(false, JsonRequestBehavior.AllowGet);
+                }
+            }
+        }
     }
 }

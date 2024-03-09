@@ -85,7 +85,7 @@ namespace GestionaleAlbergo.Controllers
                     cmd.Parameters.AddWithValue("TariffaApplicata", formPrenotazione.TariffaApplicata);
                     cmd.Parameters.AddWithValue("TipoSoggiorno", formPrenotazione.TipoSoggiorno);
                     cmd.Parameters.AddWithValue("ClienteId", formPrenotazione.ClienteId);
-                    cmd.Parameters.AddWithValue("CameraId", formPrenotazione.CameraId);
+                    cmd.Parameters.AddWithValue("CameraId", formPrenotazione.Camera.Id);
 
                     cmd.ExecuteNonQuery();
 
@@ -146,7 +146,7 @@ namespace GestionaleAlbergo.Controllers
                     cmd.Parameters.AddWithValue("TariffaApplicata", formPrenotazione.TariffaApplicata);
                     cmd.Parameters.AddWithValue("TipoSoggiorno", formPrenotazione.TipoSoggiorno);
                     cmd.Parameters.AddWithValue("ClienteId", formPrenotazione.ClienteId);
-                    cmd.Parameters.AddWithValue("CameraId", formPrenotazione.CameraId);
+                    cmd.Parameters.AddWithValue("CameraId", formPrenotazione.Camera.Id);
 
                     cmd.ExecuteNonQuery();
 

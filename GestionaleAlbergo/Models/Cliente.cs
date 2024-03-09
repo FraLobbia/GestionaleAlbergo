@@ -1,37 +1,48 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿
+using System.ComponentModel.DataAnnotations;
+using System.Web.Mvc;
 
 namespace GestionaleAlbergo.Models
 {
     public class Cliente
     {
+        //=================================================================//
         public int Id { get; set; }
+        //=================================================================//
 
-        [Required(ErrorMessage = "Il campo Codice Fiscale è obbligatorio.")]
-        [StringLength(16)]
+        [Required]
+        [Display(Name = "Codice Fiscale")]
+        [Remote("isCodiceFiscaleAvailable", "Cliente", ErrorMessage = "Codice Fiscale già esistente, inserirne un altro.")]
+        [StringLength(16, MinimumLength = 16, ErrorMessage = "Il Codice Fiscale deve essere lungo 16 caratteri.")]
         public string CodiceFiscale { get; set; }
-
-        [Required(ErrorMessage = "Il campo Cognome è obbligatorio.")]
+        //=================================================================//
+        [Required]
         public string Cognome { get; set; }
-        [Required(ErrorMessage = "Il campo Nome è obbligatorio.")]
+        //=================================================================//
+        [Required]
         public string Nome { get; set; }
-        [Required(ErrorMessage = "Il campo Città è obbligatorio.")]
+        //=================================================================//
+        [Required]
         public string Citta { get; set; }
-
-        [Required(ErrorMessage = "Il campo Provincia è obbligatorio.")]
+        //=================================================================//
+        [Required]
         public string Provincia { get; set; }
-
-        [Required(ErrorMessage = "Il campo Email è obbligatorio.")]
+        //=================================================================//
+        [Required]
+        [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
-
-        [Required(ErrorMessage = "Il campo Telefono è obbligatorio.")]
+        //=================================================================//
+        [Required]
+        [DataType(DataType.PhoneNumber)]
         public string Telefono { get; set; }
-
-        [Required(ErrorMessage = "Il campo Cellulare è obbligatorio.")]
+        //=================================================================//
+        [Required]
+        [DataType(DataType.PhoneNumber)]
         public string Cellulare { get; set; }
-
+        //=================================================================//
         [ScaffoldColumn(false)]
         public string Messaggio { get; set; }
-
+        //=================================================================//
         [ScaffoldColumn(false)]
         [Display(Name = "Nome Completo")]
         public string NomeCompleto
@@ -41,6 +52,7 @@ namespace GestionaleAlbergo.Models
                 return Cognome + " " + Nome;
             }
         }
+        //=================================================================//
     }
 
 }

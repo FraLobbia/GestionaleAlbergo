@@ -134,6 +134,7 @@
     <Compile Include="Models\Dipendente.cs" />
     <Compile Include="Models\Prenotazione.cs" />
     <Compile Include="Models\ServizioAggiuntivo.cs" />
+    <Compile Include="Models\ServizioAggiuntivoPrenotazione.cs" />
     <Compile Include="Models\SiteRole.cs" />
     <Compile Include="Models\Utility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -660,6 +661,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="CustomValidation\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

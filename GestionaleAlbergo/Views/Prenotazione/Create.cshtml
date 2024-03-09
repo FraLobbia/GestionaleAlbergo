@@ -54,7 +54,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.DataPrenotazione, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.DataPrenotazione, new { htmlAttributes = new { @class = "form-control", type = "date"} })
+                @Html.EditorFor(model => model.DataPrenotazione, new { htmlAttributes = new { @class = "form-control", type = "date" } })
                 @Html.ValidationMessageFor(model => model.DataPrenotazione, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -70,7 +70,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.PeriodoDal, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.PeriodoDal, new { htmlAttributes = new { @class = "form-control", type = "date" } })
+                @Html.EditorFor(model => model.PeriodoDal, new { htmlAttributes = new { @class = "form-control", type = "date"} })
                 @Html.ValidationMessageFor(model => model.PeriodoDal, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -111,16 +111,20 @@
             @Html.LabelFor(model => model.ClienteId, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                
-                @Html.DropDownList("ClienteId", selectListClienti, "Seleziona un cliente", new { @class = "form-control" })
+                @Html.DropDownList("ClienteId",
+               selectListClienti, 
+               "Seleziona un cliente", 
+               new { @class = "form-control" })
+
                 @Html.ValidationMessageFor(model => model.ClienteId, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.CameraId, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.Camera.Id, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("CameraId", selectListCamere, "Seleziona una camera", new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.CameraId, "", new { @class = "text-danger" })
+                @Html.DropDownList("Camera.Id", selectListCamere, "Seleziona una camera", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Camera.Id, "", new { @class = "text-danger" })
             </div>
         </div>
 

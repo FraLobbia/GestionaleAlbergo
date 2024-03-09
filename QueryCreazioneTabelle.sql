@@ -31,14 +31,46 @@
 --    CameraId INT FOREIGN KEY REFERENCES Camera(Id)
 --)
 
---CREATE TABLE ServizioAggiuntivo (
+-- Creazione della tabella ServiziAggiuntiviDisponibili
+--select * from ServiziAggiuntiviDisponibili
+--CREATE TABLE ServiziAggiuntiviDisponibili (
 --    Id INT PRIMARY KEY IDENTITY,
---	Descrizione NVARCHAR(50),
+--    Descrizione NVARCHAR(50),
+--    Prezzo MONEY NOT NULL
+--);
+--select * from ServizioAggiuntivoPrenotazione
+--CREATE TABLE ServizioAggiuntivoPrenotazione (
+--    Id INT PRIMARY KEY IDENTITY,
 --    Data DATE NOT NULL,
 --    Quantita INT NOT NULL,
---    Prezzo MONEY NOT NULL,
---    PrenotazioneId INT FOREIGN KEY REFERENCES Prenotazione(Id)
+--    PrenotazioneId INT FOREIGN KEY REFERENCES Prenotazione(Id),
+--	ServizioAggiuntivoId INT FOREIGN KEY REFERENCES ServiziAggiuntiviDisponibili(Id)
 --);
+
+--insert into ServizioAggiuntivoPrenotazione ('Data','Quantita','PrenotazioneId','ServizioAggiuntivoId') values ('2024-12-12',1,1,1)
+INSERT INTO PrenotazioneServizioAggiuntivo (PrenotazioneId, ServizioAggiuntivoId, Quantita,Data)
+VALUES (1,1,1,'2024-03-08')
+
+ 
+--select * from ServizioAggiuntivoPrenotazione
+--ServiziAggiuntiviDisponibili as P
+--inner join 
+--ServizioAggiuntivoPrenotazione as D
+--on P.Id = D.PrenotazioneId
+
+-- Inserimento di 10 record di esempio
+--INSERT INTO ServiziAggiuntiviDisponibili (Descrizione, Prezzo)
+--VALUES
+--    ('Accesso alla piscina', 15.00),
+--    ('Servizio di lavanderia', 20.00),
+--    ('Colazione continentale', 10.00),
+--    ('Parcheggio privato', 12.00),
+--    ('Wi-Fi ad alta velocità', 5.00),
+--    ('Servizio in camera', 25.00),
+--    ('Palestra', 10.00),
+--    ('Navetta per aeroporto', 30.00),
+--    ('Spa e trattamenti benessere', 50.00),
+--    ('Escursioni guidate', 40.00);
 
 --CREATE TABLE Dipendenti (
 --Id INT PRIMARY KEY IDENTITY,
@@ -47,10 +79,6 @@
 --role NVARCHAR(50) NOT NULL,
 --)
 
---insert into Dipendenti (username,password,role) values ('lobbia','12345','admin')
+----insert into Dipendenti (username,password,role) values ('lobbia','12345','admin')
 
-SELECT * FROM Prenotazione WHERE TipoSoggiorno = 'Pensione completa'
-
-select * from prenotazione
-
-select * from cliente
+--SELECT * FROM Prenotazione WHERE TipoSoggiorno = 'Pensione completa'

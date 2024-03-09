@@ -1,62 +1,90 @@
-﻿@model GestionaleAlbergo.Models.ServizioAggiuntivo
+﻿@model GestionaleAlbergo.Models.ServizioAggiuntivoPrenotazione
 
 @{
     ViewBag.Title = "Create";
-    var PrenotazioneId = ViewBag.PrenotazioneId;
+    var prenotazioneId = ViewBag.PrenotazioneId;
+    var serviziDisponibili = GestionaleAlbergo.Models.Utility.GetServiziAggiuntivi();
+    var selectListServizi = new SelectList(serviziDisponibili, "Id", "NomeCompleto");
+
+    if (TempData["msgErrore"] != null)
+    {
+        ViewBag.msgErrore = TempData["msgErrore"];
+    }
+    if (TempData["msgSuccess"] != null)
+    {
+        ViewBag.msgSuccess = TempData["msgSuccess"];
+    }
 
 }
 
-<h2>Create</h2>
+<h1>Aggiungi servizio aggiuntivo a prenotazione</h1>
 
-@using (Html.BeginForm()) 
+@if (ViewBag.msgErrore != null)
+{
+    <div class="alert alert-danger fw-bold text-danger my-3" role="alert">
+        @ViewBag.msgErrore
+    </div>
+}
+@if (ViewBag.msgSuccess != null)
+{
+    <div class="alert alert-success fw-bold text-success my-3" role="alert">
+        @ViewBag.msgSuccess
+    </div>
+}
+
+@Html.ActionLink("Torna a elenco", "Index", new { id = prenotazioneId }, new { @class = "btn btn-outline-primary" })
+
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
-<div class="form-horizontal">
-    <h4>ServizioAggiuntivo</h4>
-    <hr />
 
-     @Html.HiddenFor(model => model.PrenotazioneId, new { @Value = PrenotazioneId })
+    <div class="form-horizontal">
+        <h4>ServizioAggiuntivoPrenotazione</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    <div class="form-group">
-        @Html.LabelFor(model => model.Descrizione, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Descrizione, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Descrizione, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.ServizioAggiuntivoID,
+           "Servizio Aggiuntivo",
+           htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+
+                @Html.DropDownListFor(model => model.ServizioAggiuntivoID,
+                   selectListServizi,
+                   "Scegli il servizio aggiuntivo",
+                   new { @class = "form-control" })
+
+                @Html.ValidationMessageFor(model => model.ServizioAggiuntivoID,
+               "",
+               new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Data,
+           htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Data,
+               new { htmlAttributes = new { @class = "form-control", Value = DateTime.Now.Date } })
+                @Html.ValidationMessageFor(model => model.Data,
+               "",
+               new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Quantita, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Quantita, new { htmlAttributes = new { @class = "form-control", Value = 1 } })
+                @Html.ValidationMessageFor(model => model.Quantita, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-success" />
+            </div>
         </div>
     </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.Data, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Data, new { htmlAttributes = new { @class = "form-control", type = "date" } })
-            @Html.ValidationMessageFor(model => model.Data, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.Quantita, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Quantita, new { htmlAttributes = new { @class = "form-control", Value = 1 } })
-            @Html.ValidationMessageFor(model => model.Quantita, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.Prezzo, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Prezzo, new { htmlAttributes = new { @class = "form-control", Value = 20 } })
-            @Html.ValidationMessageFor(model => model.Prezzo, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Create" class="btn btn-success" />
-            @Html.ActionLink("Torna a elenco", "Index", "Prenotazione", new { @class = "btn btn-outline-primary" })
-        </div>
-    </div>
-</div>
 }
+
 

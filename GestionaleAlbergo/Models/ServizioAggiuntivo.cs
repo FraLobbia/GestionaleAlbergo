@@ -5,19 +5,29 @@ namespace GestionaleAlbergo.Models
 {
     public class ServizioAggiuntivo
     {
+        //=================================================================//
         public int Id { get; set; }
+        //=================================================================//
+        [Required]
         public string Descrizione { get; set; }
-        public DateTime Data { get; set; }
-        public int Quantita { get; set; }
+        //=================================================================//
+        [Required]
         public decimal Prezzo { get; set; }
-        [ScaffoldColumn(false)]
-        public int PrenotazioneId { get; set; }
-        [ScaffoldColumn(false)]
-        public Prenotazione Prenotazione { get; set; }
-
+        //=================================================================//
         [ScaffoldColumn(false)]
         public string Messaggio { get; set; }
+        //=================================================================//
+
+        [ScaffoldColumn(false)]
+        public string NomeCompleto
+        {
+            get
+            {
+                int prezzo = Convert.ToInt32(Prezzo);
+
+                return Descrizione + " - " + prezzo + "€";
+            }
+        }
 
     }
-
 }
