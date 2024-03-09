@@ -45,12 +45,16 @@ h1 {
     margin-inline: auto;
 }
 
-td:last-of-type > div {
+td:last-of-type {
 
     @extend .d-flex;
+    @extend .flex-column;
     @extend .justify-content-center;
-    @extend .align-items-center;
-    @extend .gap-2
+/*    @extend .align-items-center;*/
+row-gap: 1rem;
+    .btn {
+        margin: 0;
+    }
 }
 
 .form-horizontal, .dl-horizontal {

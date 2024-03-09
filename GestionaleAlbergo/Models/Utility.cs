@@ -440,7 +440,7 @@ namespace GestionaleAlbergo.Models
 
         // metodo per ottenere i servizi aggiuntivi in base ad un id prenotazione
         // riceve un id di tipo intero che rappresenta l'id della prenotazione
-        // restituisce una lista di oggetti di tipo ServizioAggiuntivo
+        // restituisce una lista di oggetti di tipo ServizioAggiuntivoPrenotazione
         public static List<ServizioAggiuntivoPrenotazione> GetServiziAggiuntiviByPrenotazioneId(int prenotazioneId)
         {
             // crea una lista di servizi aggiuntivi
@@ -483,6 +483,41 @@ namespace GestionaleAlbergo.Models
             }
 
             return serviziAggiuntivi;
+        }
+
+        // Metodo per ottenere un servizio aggiuntivo in base all'id
+        // Riceve un intero che rappresenta l'id del servizio aggiuntivo
+        // Restituisce un oggetto di tipo ServizioAggiuntivoPrenotazione
+        public static ServizioAggiuntivoPrenotazione GetServizioAggiuntivoPrenotazioneById(int id)
+        {
+            using (SqlConnection conn = Connection.GetConn())
+            {
+                try
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand(
+                                               "SELECT * FROM PrenotazioneServizioAggiuntivo " +
+                                                                      "WHERE ID = @ID", conn);
+                    cmd.Parameters.AddWithValue("ID", id);
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    ServizioAggiuntivoPrenotazione s = new ServizioAggiuntivoPrenotazione();
+                    while (reader.Read())
+                    {
+                        s.Id = reader.GetInt32(reader.GetOrdinal("ID"));
+                        s.ServizioAggiuntivoID = reader.GetInt32(reader.GetOrdinal("ServizioAggiuntivoId"));
+                        s.Data = reader.GetDateTime(reader.GetOrdinal("Data"));
+                        s.Quantita = reader.GetInt32(reader.GetOrdinal("Quantita"));
+                        s.PrenotazioneId = reader.GetInt32(reader.GetOrdinal("PrenotazioneId"));
+                    }
+                    return s;
+                }
+                catch (Exception ex)
+                {
+                    ServizioAggiuntivoPrenotazione msgErrore = new ServizioAggiuntivoPrenotazione();
+                    msgErrore.ServizioAggiuntivo.Messaggio = "Errore: " + ex.Message;
+                    return msgErrore;
+                }
+            }
         }
 
         // metodo per ottenere la lista dei servizi aggiuntivi

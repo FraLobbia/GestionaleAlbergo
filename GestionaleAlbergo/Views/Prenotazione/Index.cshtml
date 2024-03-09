@@ -106,10 +106,10 @@
                 @Html.DisplayFor(modelItem => item.ImportoDovuto)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-outline-warning  m-0" })
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-outline-danger  m-0" })
-                @Html.ActionLink("CheckOut", "CheckOut", new { id = item.Id }, new { @class = "btn btn-success  m-0" })
-                @Html.ActionLink("Servizi aggiuntivi", "Index", "ServizioAggiuntivo",  new { id = item.Id }, new { @class = "btn btn-success  m-0" })
+                @Html.ActionLink("CheckOut", "CheckOut", new { id = item.Id }, new { @class = "btn btn-success" })
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-outline-warning" })
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-outline-danger" })
+                @Html.ActionLink("Servizi aggiuntivi", "Index", "ServizioAggiuntivo",  new { id = item.Id }, new { @class = "btn btn-outline-success" })
             </td>
         </tr>
     }

@@ -74,6 +74,8 @@ namespace GestionaleAlbergo.Controllers
         // GET: ServizioAggiuntivo/Edit/5
         public ActionResult Edit(int id)
         {
+            // ottieni il servizio aggiuntivo da modificare
+            ServizioAggiuntivoPrenotazione servizioAggiuntivo = Utility.GetServizioAggiuntivoPrenotazioneById(id);
             return View();
         }
 
